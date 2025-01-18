@@ -4,9 +4,12 @@ const port1 = 3001;
 const app = express();
 
 require("./db");
+require("./model/Doctor");
 
+const authRoutes = require("./routes/authRoutes");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

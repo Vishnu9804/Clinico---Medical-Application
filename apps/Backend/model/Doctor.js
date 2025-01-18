@@ -80,4 +80,15 @@ const doctorSchema = new mongoose.Schema({
   },
 });
 
+doctorSchema.pre("save", async function (next) {
+  const user = this;
+  console.log("Just before hashing :- ", user.password);
+  if (!user.isModified("password")) {
+    return next();
+  }
+  user.password = await bcrypt.hash(user.password, 8);
+  console.log("After Hasing :- ", user.password);
+  next();
+});
+
 mongoose.model("Doctor", doctorSchema);
