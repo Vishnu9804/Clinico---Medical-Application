@@ -184,3 +184,26 @@ router.post("/verifyfp", (req, res) => {
     }
   });
 });
+
+router.post("/resetpass", (req, res) => {
+  const { doc_email, password } = req.body;
+  if (!doc_email || !password) {
+    return res.status(422).json({ error: "Please Enter Required Fields!!!!" });
+  } else {
+    Doctor.findOne({ doc_email: doc_email }).then(async (savedUser) => {
+      if (savedUser) {
+        savedUser.password = password;
+        savedUser
+          .save()
+          .then((user) => {
+            res.json({ message: "Password Updated Succefully!!!!" });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        res.status(422).json({ error: "Invalid Credential" });
+      }
+    });
+  }
+});
