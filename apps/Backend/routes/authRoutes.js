@@ -207,3 +207,25 @@ router.post("/resetpass", (req, res) => {
     });
   }
 });
+
+router.post("/doctordata", (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res
+      .status(422)
+      .json({ error: "You Must be Logged In Token not given!!!!" });
+  }
+  const token = authorization.replace("Bearer ", "");
+  jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+    if (err) {
+      return res.status(422).json({ error: "Token Invalid!!!!" });
+    }
+    const { _id } = payload;
+    Doctor.findById(_id).then((userdata) => {
+      res.status(200).send({
+        message: "User data fetched succefully!!!!",
+        user: userdata,
+      });
+    });
+  });
+});
