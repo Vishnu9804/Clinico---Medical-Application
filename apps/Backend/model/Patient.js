@@ -51,3 +51,16 @@ const patientSchema = new mongoose.Schema({
     },
   ],  
 });
+
+patientSchema.pre("save", async function (next) {
+    const user = this;
+    console.log("Just before hashing :- ", user.pat_pass);
+    if (!user.isModified("pat_pass")) {
+      return next();
+    }
+    user.pat_pass = await bcrypt.hash(user.pat_pass, 8);
+    console.log("After Hashing :- ", user.pat_pass);
+    next();
+  });
+  
+  mongoose.model("Patient", patientSchema);
