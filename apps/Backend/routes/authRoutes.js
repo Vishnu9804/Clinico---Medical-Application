@@ -229,3 +229,75 @@ router.post("/doctordata", (req, res) => {
     });
   });
 });
+
+router.post("/doctorprofiledata", (req, res) => {
+  const { doc_email } = req.body;
+  console.log("Into route", doc_email);
+  if (!doc_email) {
+    return res
+      .status(422)
+      .json({ error: "You Must be Logged In Token not given!!!!" });
+  }
+  Doctor.findOne({ doc_email: doc_email }).then((userdata) => {
+    res.status(200).send({
+      message: "User data fetched succefully!!!!",
+      user: userdata,
+    });
+  });
+});
+
+router.post("/updateprofile", async (req, res) => {
+  const {
+    doc_email, // Required to identify the doctor
+    doc_name,
+    doc_phone,
+    doc_dob,
+    doc_spec,
+    doc_gender,
+    doc_degree,
+    doc_exp,
+    clinic_time,
+    clinic_name,
+    clinic_phone,
+    clinic_add,
+  } = req.body;
+
+  if (!doc_email) {
+    return res
+      .status(422)
+      .json({ error: "Email is required to update profile" });
+  }
+
+  try {
+    const updateFields = {};
+    if (doc_name) updateFields.doc_name = doc_name;
+    if (doc_phone) updateFields.doc_phone = doc_phone;
+    if (doc_dob) updateFields.doc_dob = doc_dob;
+    if (doc_gender) updateFields.doc_gender = doc_gender;
+    if (doc_spec) updateFields.doc_spec = doc_spec;
+    if (doc_degree) updateFields.doc_degree = doc_degree;
+    if (doc_exp) updateFields.doc_exp = doc_exp;
+    if (clinic_time) updateFields.clinic_time = clinic_time;
+    if (clinic_name) updateFields.clinic_name = clinic_name;
+    if (clinic_phone) updateFields.clinic_phone = clinic_phone;
+    if (clinic_add) updateFields.clinic_add = clinic_add;
+
+    const updatedDoctor = await Doctor.findOneAndUpdate(
+      { doc_email },
+      { $set: updateFields },
+      { new: true }
+    );
+
+    if (!updatedDoctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    console.log("Profile updated successfully");
+    return res
+      .status(200)
+      .json({ message: "Profile updated successfully", updatedDoctor });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to update profile" });
+  }
+});
