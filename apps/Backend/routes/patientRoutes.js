@@ -97,3 +97,64 @@ router.post("/psignin", (req, res) => {
       });
   }
 });
+router.post("/patientdata", (req, res) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res
+      .status(422)
+      .json({ error: "You Must be Logged In. Token not given!!!!" });
+  }
+
+  const token = authorization.replace("Bearer ", "");
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+    if (err) {
+      return res.status(422).json({ error: "Token Invalid!!!!" });
+    }
+
+    const { _id } = payload;
+
+    Patient.findById(_id)
+      .then((userdata) => {
+        if (!userdata) {
+          return res.status(404).json({ error: "Patient not found!" });
+        }
+
+        res.status(200).send({
+          message: "User data fetched successfully!!!!",
+          user: userdata,
+        });
+      })
+      .catch((err) => {
+        console.error("Error fetching patient data:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+      });
+  });
+});
+
+router.post("/pverify", (req, res) => {
+  console.log("sent by client", req.body);
+  const { pat_email } = req.body;
+
+  if (!pat_email) {
+    return res.status(422).json({ error: "Please add all fields" });
+  }
+  Patient.findOne({ pat_email: pat_email }).then(async (savedUser) => {
+    if (savedUser) {
+      return res.status(422).json({ error: "Invalid Email" });
+    }
+    try {
+      let verificationCode = Math.floor(100000 + Math.random() * 900000);
+      await mailer(pat_email, verificationCode);
+      console.log("Verification Code", verificationCode);
+      res.send({
+        message: "Verification code sent to your Email",
+        verificationCode,
+        pat_email,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+});
