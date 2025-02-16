@@ -158,3 +158,54 @@ router.post("/pverify", (req, res) => {
     }
   });
 });
+
+router.post("/pverifyfp", (req, res) => {
+  console.log("sent by client", req.body);
+  const { pat_email } = req.body;
+
+  if (!pat_email) {
+    return res.status(422).json({ error: "Please add all the fields" });
+  }
+
+  Patient.findOne({ pat_email: pat_email }).then(async (savedUser) => {
+    if (savedUser) {
+      try {
+        let VerificationCode = Math.floor(100000 + Math.random() * 900000);
+        await mailer(pat_email, VerificationCode);
+        console.log("Verification Code", VerificationCode);
+        res.send({
+          message: "Verification Code Sent to your Email",
+          VerificationCode,
+          pat_email,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      return res.status(422).json({ error: "Invalid Credentials" });
+    }
+  });
+});
+
+router.post("/presetpass", (req, res) => {
+  const { pat_email, pat_pass } = req.body;
+  if (!pat_email || !pat_pass) {
+    return res.status(422).json({ error: "Please Enter Required Fields!!!!" });
+  } else {
+    Patient.findOne({ pat_email: pat_email }).then(async (savedUser) => {
+      if (savedUser) {
+        savedUser.pat_pass = pat_pass;
+        savedUser
+          .save()
+          .then(() => {
+            res.json({ message: "Password Updated Successfully!!!!" });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        res.status(422).json({ error: "Invalid Credential" });
+      }
+    });
+  }
+});
