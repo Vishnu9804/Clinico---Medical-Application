@@ -17,7 +17,7 @@ import MyUserProfile from "./SRC/Screens/Mainpage/MyUserProfile";
 import Signup_StaffEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_StaffEnterInfo";
 import Signup_PatientEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_PatientEnterInfo";
 // import History from "./SRC/Screens/Mainpage/History";
-// import Search from "./SRC/Screens/Mainpage/Search";
+import Search from "./SRC/Screens/Mainpage/Search";
 // import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
 // import Customization from "./SRC/Screens/Mainpage/Customization";
 // import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
