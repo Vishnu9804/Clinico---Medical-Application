@@ -11,9 +11,11 @@ import Signup_AccountCreated from "./SRC/Screens/LoginSignup/Signup/Signup_Accou
 import Signup_EnterVerificationCode from "./SRC/Screens/LoginSignup/Signup/Signup_EnterVerificationCode";
 import Signup_ChoosePassword from "./SRC/Screens/LoginSignup/Signup/Signup_ChoosePassword";
 import Signup_EnterEmail from "./SRC/Screens/LoginSignup/Signup/Signup_EnterEmail";
-import Signup_EnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_EnterInfo";
-// import Mainpage from "./SRC/Screens/Mainpage/Mainpage";
-// import MyUserProfile from "./SRC/Screens/Mainpage/MyUserProfile";
+import Signup_EnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_StaffEnterInfo";
+import Mainpage from "./SRC/Screens/Mainpage/Mainpage";
+import MyUserProfile from "./SRC/Screens/Mainpage/MyUserProfile";
+import Signup_StaffEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_StaffEnterInfo";
+import Signup_PatientEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_PatientEnterInfo";
 // import History from "./SRC/Screens/Mainpage/History";
 // import Search from "./SRC/Screens/Mainpage/Search";
 // import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
@@ -32,8 +34,6 @@ import Signup_EnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_EnterInfo"
 // import AdminManagePatient from "./SRC/StaffScreens/Mainpage/AdminManagePatient";
 // import AdminManageStaff from "./SRC/StaffScreens/Mainpage/AdminManageStaff";
 // import AdminSearch from "./SRC/StaffScreens/Mainpage/AdminSearch";
-// import Signup_StaffEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_StaffEnterInfo";
-// import Signup_PatientEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_PatientEnterInfo";
 // import PatientMyUserProfile from "./SRC/PatientScreens/Mainpage/PatientMyUserProfile";
 // import PatientProfile from "./SRC/PatientScreens/Mainpage/PatientProfile";
 // import PatientEditProfile from "./SRC/PatientScreens/Mainpage/PatientEditProfile";
@@ -81,13 +81,21 @@ export default function App() {
           component={Signup_EnterVerificationCode}
         />
         <Stack.Screen name="Signup_EnterInfo" component={Signup_EnterInfo} />
-        {/* <Stack.Screen name="MyUserProfile" component={MyUserProfile} />
+        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Mainpage" component={Mainpage} />
+        <Stack.Screen name="MyUserProfile" component={MyUserProfile} />
+        <Stack.Screen
+          name="Signup_StaffEnterInfo"
+          component={Signup_StaffEnterInfo}
+        />
+        <Stack.Screen
+          name="Signup_PatientEnterInfo"
+          component={Signup_PatientEnterInfo}
+        />
         <Stack.Screen name="ManageStaff" component={ManageStaff} />
         <Stack.Screen name="ManagePatient" component={ManagePatient} />
         <Stack.Screen name="Customization" component={Customization} />
         <Stack.Screen name="History" component={History} />
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="Mainpage" component={Mainpage} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="PatientMainpage" component={PatientMainpage} />
@@ -108,14 +116,6 @@ export default function App() {
         <Stack.Screen name="AdminManageStaff" component={AdminManageStaff} />
         <Stack.Screen name="AdminSearch" component={AdminSearch} />
         <Stack.Screen
-          name="Signup_StaffEnterInfo"
-          component={Signup_StaffEnterInfo}
-        />
-        <Stack.Screen
-          name="Signup_PatientEnterInfo"
-          component={Signup_PatientEnterInfo}
-        />
-        <Stack.Screen
           name="PatientMyUserProfile"
           component={PatientMyUserProfile}
         />
@@ -129,7 +129,11 @@ export default function App() {
           component={StaffMyUserProfile}
         />
         <Stack.Screen name="StaffProfile" component={StaffProfile} />
-        <Stack.Screen name="StaffEditProfile" component={StaffEditProfile} /> */}
+        <Stack.Screen
+          name="StaffEditProfile"
+          component={StaffEditProfile}
+        />{" "}
+        */}
       </Stack.Navigator>
     </NavigationContainer>
   );
