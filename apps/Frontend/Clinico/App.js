@@ -18,11 +18,11 @@ import Signup_StaffEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_Staff
 import Signup_PatientEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_PatientEnterInfo";
 // import History from "./SRC/Screens/Mainpage/History";
 import Search from "./SRC/Screens/Mainpage/Search";
+import ManageStaff from "./SRC/Screens/Mainpage/ManageStaff";
 // import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
 // import Customization from "./SRC/Screens/Mainpage/Customization";
 // import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
 // import Details from "./SRC/Screens/Mainpage/Details";
-// import ManageStaff from "./SRC/Screens/Mainpage/ManageStaff";
 // import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 // import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
