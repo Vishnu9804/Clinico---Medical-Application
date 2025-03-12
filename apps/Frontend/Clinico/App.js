@@ -21,7 +21,7 @@ import Search from "./SRC/Screens/Mainpage/Search";
 import ManageStaff from "./SRC/Screens/Mainpage/ManageStaff";
 import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
 import Customization from "./SRC/Screens/Mainpage/Customization";
-// import Details from "./SRC/Screens/Mainpage/Details";
+import Details from "./SRC/Screens/Mainpage/Details";
 // import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
 // import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
@@ -95,9 +95,9 @@ export default function App() {
         <Stack.Screen name="ManageStaff" component={ManageStaff} />
         <Stack.Screen name="ManagePatient" component={ManagePatient} />
         <Stack.Screen name="Customization" component={Customization} />
+        <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="History" component={History} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="PatientMainpage" component={PatientMainpage} />
         <Stack.Screen name="UploadPage" component={UploadPage} />
         <Stack.Screen name="ManageRequest" component={ManageRequest} />
