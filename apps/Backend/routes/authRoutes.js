@@ -405,3 +405,58 @@ router.post("/showreminder", async (req, res) => {
     return res.status(500).json({ error: "Failed to retrieve reminders" });
   }
 });
+
+router.post("/deletereminder", async (req, res) => {
+  const { doc_email, date, index } = req.body;
+
+  if (!doc_email || !date || index === undefined) {
+    return res
+      .status(422)
+      .json({ error: "Email, date, and index are required" });
+  }
+
+  try {
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Find the specific date in the doc_rem array
+    const reminderEntry = doctor.doc_rem.find((rem) => rem.date === date);
+
+    if (!reminderEntry) {
+      return res
+        .status(404)
+        .json({ error: "No reminders found for this date" });
+    }
+
+    // Check if the index is valid
+    if (index < 0 || index >= reminderEntry.reminders.length) {
+      return res.status(400).json({ error: "Invalid reminder index" });
+    }
+
+    // Remove the reminder at the given index
+    reminderEntry.reminders.splice(index, 1);
+
+    // If no reminders left for that date, optionally remove the whole entry
+    if (reminderEntry.reminders.length === 0) {
+      const entryIndex = doctor.doc_rem.indexOf(reminderEntry);
+      doctor.doc_rem.splice(entryIndex, 1); // Remove the whole entry
+    }
+
+    // Save the updated doctor profile
+    await doctor.save();
+
+    console.log("Reminder deleted successfully");
+
+    return res.status(200).json({
+      message: "Reminder deleted successfully",
+      doc_rem: doctor.doc_rem, // Return the updated doc_rem array
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to delete reminder" });
+  }
+});
