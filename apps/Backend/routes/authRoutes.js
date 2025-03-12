@@ -322,3 +322,49 @@ router.post("/setprofilepic", (req, res) => {
       console.log(err);
     });
 });
+router.post("/addreminder", async (req, res) => {
+  console.log("Called this");
+  const { doc_email, date, reminder } = req.body;
+
+  if (!doc_email || !date || !reminder) {
+    return res
+      .status(422)
+      .json({ error: "Email, date, and reminder are required" });
+  }
+
+  try {
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Check if a reminder entry for the given date already exists
+    const existingReminder = doctor.doc_rem.find((rem) => rem.date === date);
+
+    if (existingReminder) {
+      // If the date already exists, add the new reminder to the existing reminders
+      existingReminder.reminders.push(reminder);
+    } else {
+      // If no existing reminder for this date, create a new entry
+      doctor.doc_rem.push({
+        date: date, // Store the date as a string
+        reminders: [reminder],
+      });
+    }
+
+    // Save the updated doctor profile
+    await doctor.save();
+
+    console.log("Reminder added successfully");
+    return res.status(200).json({
+      message: "Reminder added successfully",
+      doc_rem: doctor.doc_rem,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to add reminder" });
+  }
+});
+
