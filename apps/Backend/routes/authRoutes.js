@@ -368,3 +368,40 @@ router.post("/addreminder", async (req, res) => {
   }
 });
 
+router.post("/showreminder", async (req, res) => {
+  const { doc_email, date } = req.body;
+
+  console.log("Getting from user :- " + doc_email);
+  console.log("Getting from user :- " + date);
+
+  if (!doc_email || !date) {
+    return res.status(422).json({ error: "Email and date are required" });
+  }
+
+  try {
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Find the specific date entry in the doc_rem array
+    const reminderEntry = doctor.doc_rem.find((rem) => rem.date === date);
+
+    if (!reminderEntry) {
+      return res
+        .status(404)
+        .json({ error: "No reminders found for this date" });
+    }
+
+    // Return the reminders for that date
+    return res.status(200).json({
+      message: "Reminders retrieved successfully",
+      reminders: reminderEntry.reminders, // Array of reminders for the date
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to retrieve reminders" });
+  }
+});
