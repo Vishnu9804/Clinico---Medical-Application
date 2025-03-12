@@ -20,9 +20,9 @@ import Signup_PatientEnterInfo from "./SRC/Screens/LoginSignup/Signup/Signup_Pat
 import Search from "./SRC/Screens/Mainpage/Search";
 import ManageStaff from "./SRC/Screens/Mainpage/ManageStaff";
 import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
-// import Customization from "./SRC/Screens/Mainpage/Customization";
-// import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
+import Customization from "./SRC/Screens/Mainpage/Customization";
 // import Details from "./SRC/Screens/Mainpage/Details";
+// import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
 // import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 // import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
@@ -133,7 +133,6 @@ export default function App() {
           name="StaffEditProfile"
           component={StaffEditProfile}
         />{" "}
-        */}
       </Stack.Navigator>
     </NavigationContainer>
   );
