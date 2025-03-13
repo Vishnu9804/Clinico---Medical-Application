@@ -22,13 +22,13 @@ import ManageStaff from "./SRC/Screens/Mainpage/ManageStaff";
 import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
 import Customization from "./SRC/Screens/Mainpage/Customization";
 import Details from "./SRC/Screens/Mainpage/Details";
-// import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
+import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
+// import DoctorProfile from "./SRC/Screens/Mainpage/DoctorProfile";s
+// import PatientReport from "./SRC/Screens/Mainpage/PatientReport";
 // import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 // import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
 // import AcceptedDoctor from "./SRC/PatientScreens/Mainpage/AcceptedDoctor";
-// import DoctorProfile from "./SRC/Screens/Mainpage/DoctorProfile";
-// import PatientReport from "./SRC/Screens/Mainpage/PatientReport";
 // import AdminMainpage from "./SRC/StaffScreens/Mainpage/AdminMainpage";
 // import AdminCustomization from "./SRC/StaffScreens/Mainpage/AdminCustomization";
 // import AdminManagePatient from "./SRC/StaffScreens/Mainpage/AdminManagePatient";
