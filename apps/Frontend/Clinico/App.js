@@ -23,7 +23,7 @@ import ManagePatient from "./SRC/Screens/Mainpage/ManagePatient";
 import Customization from "./SRC/Screens/Mainpage/Customization";
 import Details from "./SRC/Screens/Mainpage/Details";
 import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
-// import DoctorProfile from "./SRC/Screens/Mainpage/DoctorProfile";s
+import DoctorProfile from "./SRC/Screens/Mainpage/DoctorProfile";s
 // import PatientReport from "./SRC/Screens/Mainpage/PatientReport";
 // import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
