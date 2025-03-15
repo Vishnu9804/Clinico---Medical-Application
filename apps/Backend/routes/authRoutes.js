@@ -552,3 +552,38 @@ router.post("/showstaffcategories", async (req, res) => {
       .json({ error: "Failed to retrieve staff categories" });
   }
 });
+
+router.post("/addstaffcategory", async (req, res) => {
+  const { doc_email, category } = req.body;
+
+  if (!doc_email || !category) {
+    return res
+      .status(422)
+      .json({ error: "Doctor email and category are required" });
+  }
+
+  try {
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Check if the category already exists
+    if (doctor.emp_category.includes(category)) {
+      return res.status(400).json({ error: "Category already exists" });
+    }
+
+    // Add the new category
+    doctor.emp_category.push(category);
+    await doctor.save();
+
+    return res.status(200).json({
+      message: "Category added successfully",
+      emp_category: doctor.emp_category,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to add category" });
+  }
+});
