@@ -522,3 +522,33 @@ router.post("/showstaff", async (req, res) => {
     return res.status(500).json({ error: "Failed to retrieve staff members" });
   }
 });
+
+router.post("/showstaffcategories", async (req, res) => {
+  const { doc_email } = req.body;
+
+  console.log("Getting from user :- " + doc_email);
+
+  if (!doc_email) {
+    return res.status(422).json({ error: "Doctor email is required" });
+  }
+
+  try {
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Return the list of staff categories
+    return res.status(200).json({
+      message: "Staff categories retrieved successfully",
+      categories: doctor.emp_category,
+    });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "Failed to retrieve staff categories" });
+  }
+});
