@@ -460,3 +460,28 @@ router.post("/deletereminder", async (req, res) => {
     return res.status(500).json({ error: "Failed to delete reminder" });
   }
 });
+router.post("/addstaff", async (req, res) => {
+  const { doc_email, staff_email, designation } = req.body;
+
+  if (!doc_email || !staff_email || !designation) {
+    return res.json({
+      error: "docter email or staff email or designation missing",
+    });
+  }
+
+  try {
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.json({ error: "Doctor not found" });
+    }
+
+    doctor.emp_list.push({ staff_email, designation });
+    await doctor.save();
+
+    return res.json({ message: "Staff Added Succefully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to Add Staff" });
+  }
+});
