@@ -485,3 +485,40 @@ router.post("/addstaff", async (req, res) => {
     return res.status(500).json({ error: "Failed to Add Staff" });
   }
 });
+
+router.post("/showstaff", async (req, res) => {
+  const { doc_email } = req.body;
+
+  console.log("Getting from user :- " + doc_email);
+
+  if (!doc_email) {
+    return res.status(422).json({ error: "Doctor email is required" });
+  }
+
+  try {
+    // Find the doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Check if the doctor has any staff members
+    if (!doctor.emp_list || doctor.emp_list.length === 0) {
+      return res.status(200).json({
+        message: "No staff members found",
+        staff: [],
+      });
+    }
+
+    console.log(doctor.emp_list);
+    // Return the list of staff members
+    return res.status(200).json({
+      message: "Staff members retrieved successfully",
+      staff: doctor.emp_list,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to retrieve staff members" });
+  }
+});
