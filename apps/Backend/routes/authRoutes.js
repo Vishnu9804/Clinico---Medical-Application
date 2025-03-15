@@ -587,3 +587,84 @@ router.post("/addstaffcategory", async (req, res) => {
     return res.status(500).json({ error: "Failed to add category" });
   }
 });
+
+// Edit staff category
+router.post("/editstaffcategory", async (req, res) => {
+  const { doc_email, oldCategory, newCategory } = req.body;
+
+  if (!doc_email || !oldCategory || !newCategory) {
+    return res.status(422).json({
+      error: "Doctor email, old category, and new category are required",
+    });
+  }
+
+  try {
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Check if the old category exists
+    const categoryIndex = doctor.emp_category.indexOf(oldCategory);
+    if (categoryIndex === -1) {
+      return res.status(404).json({ error: "Old category not found" });
+    }
+
+    // Update the category
+    doctor.emp_category[categoryIndex] = newCategory;
+    await doctor.save();
+
+    return res.status(200).json({
+      message: "Category updated successfully",
+      emp_category: doctor.emp_category,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to edit category" });
+  }
+});
+
+// Remove staff category
+router.post("/removestaffcategory", async (req, res) => {
+  const { doc_email, category } = req.body;
+
+  if (!doc_email || !category) {
+    return res
+      .status(422)
+      .json({ error: "Doctor email and category are required" });
+  }
+
+  try {
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Check if the category exists
+    const categoryIndex = doctor.emp_category.indexOf(category);
+    if (categoryIndex === -1) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Remove the category
+    doctor.emp_category.splice(categoryIndex, 1);
+
+    // Ensure "Admin" is always present
+    if (!doctor.emp_category.includes("Admin")) {
+      doctor.emp_category.unshift("Admin");
+    }
+
+    await doctor.save();
+
+    return res.status(200).json({
+      message: "Category removed successfully",
+      emp_category: doctor.emp_category,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to remove category" });
+  }
+});
+
