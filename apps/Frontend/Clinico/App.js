@@ -25,7 +25,7 @@ import Details from "./SRC/Screens/Mainpage/Details";
 import EditProfile from "./SRC/Screens/Mainpage/EditProfile";
 import DoctorProfile from "./SRC/Screens/Mainpage/DoctorProfile";
 import PatientReport from "./SRC/Screens/Mainpage/PatientReport";
-// import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
+import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 // import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 // import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
 // import AcceptedDoctor from "./SRC/PatientScreens/Mainpage/AcceptedDoctor";
