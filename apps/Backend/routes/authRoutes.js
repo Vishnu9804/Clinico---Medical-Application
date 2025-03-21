@@ -667,4 +667,45 @@ router.post("/removestaffcategory", async (req, res) => {
     return res.status(500).json({ error: "Failed to remove category" });
   }
 });
+router.post("/request-permission", async (req, res) => {
+  try {
+    const { doc_email, pat_email } = req.body;
+
+    const doctor = await Doctor.findOne({ doc_email: doc_email });
+    const patient = await Patient.findOne({ pat_email: pat_email });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Check if already granted
+    if (
+      doctor.dpermission_granted.includes(pat_email) ||
+      patient.ppermission_granted.includes(doc_email)
+    ) {
+      return res.status(400).json({ message: "Permission already granted" });
+    }
+    if (
+      doctor.dpermission_pending.includes(pat_email) ||
+      patient.ppermission_pending.includes(doc_email)
+    ) {
+      return res.status(400).json({ message: "Permission already Sent" });
+    }
+
+    // If not already pending, add to pending list
+    if (
+      !doctor.dpermission_pending.includes(pat_email) &&
+      !patient.ppermission_pending.includes(doc_email)
+    ) {
+      doctor.dpermission_pending.push(pat_email);
+      patient.ppermission_pending.push(doc_email);
+      await doctor.save();
+      await patient.save();
+    }
+
+    return res.status(200).json({ message: "Permission request sent" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
