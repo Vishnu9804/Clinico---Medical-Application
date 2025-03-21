@@ -965,3 +965,38 @@ router.post("/add-visiting-patient", async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
+router.post("/remove-visiting-patient", async (req, res) => {
+  try {
+    const { doc_email, pat_email } = req.body;
+
+    if (!doc_email || !pat_email) {
+      return res
+        .status(400)
+        .json({ message: "Doctor email and Patient email are required." });
+    }
+
+    // Find doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
+    // Remove patient from visiting_patients queue
+    doctor.visiting_patients = doctor.visiting_patients.filter(
+      (email) => email !== pat_email
+    );
+
+    await doctor.save();
+
+    res.status(200).json({
+      message: "Patient removed from the visiting queue successfully.",
+      visiting_patients: doctor.visiting_patients, // Return updated queue
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+});
