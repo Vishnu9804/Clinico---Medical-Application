@@ -916,3 +916,52 @@ router.post("/secure-patient-history", async (req, res) => {
       .send("An error occurred while fetching the patient's history.");
   }
 });
+router.post("/add-visiting-patient", async (req, res) => {
+  try {
+    const { doc_email, pat_email } = req.body;
+
+    if (!doc_email || !pat_email) {
+      return res
+        .status(400)
+        .json({ message: "Doctor email and Patient email are required." });
+    }
+
+    // Find doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
+    // Find patient by email
+    const patient = await Patient.findOne({ pat_email });
+
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found." });
+    }
+
+    // Add patient to the doctor's visiting queue (FIFO order)
+    doctor.visiting_patients.push(pat_email);
+    await doctor.save();
+
+    // Add doctor to patient's visited_doctors list (Stack behavior: last added comes first)
+    patient.visited_doctors = patient.visited_doctors.filter(
+      (doc) => doc.doc_email !== doc_email
+    );
+
+    patient.visited_doctors.unshift({ doc_email, doc_name: doctor.doc_name });
+
+    await patient.save();
+
+    res.status(200).json({
+      message:
+        "Patient added to the visiting queue and doctor added to visited doctors successfully.",
+      visiting_patients: doctor.visiting_patients, // Return updated queue
+      visited_doctors: patient.visited_doctors, // Return updated visited doctors list
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+});
