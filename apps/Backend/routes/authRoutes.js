@@ -865,3 +865,54 @@ router.post("/get-patient-reports", async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
+router.post("/secure-patient-history", async (req, res) => {
+  console.log("here inside ....");
+  const { pat_email, doc_email } = req.body; // Get patient and doctor emails
+
+  // Check if patient email and doctor email are provided
+  if (!pat_email || !doc_email) {
+    return res.status(400).send("Patient email and doctor email are required.");
+  }
+
+  try {
+    // Find the patient by email
+    const patient = await Patient.findOne({ pat_email });
+
+    // If patient doesn't exist, return error
+    if (!patient) {
+      return res.status(404).send("Patient not found.");
+    }
+
+    // Find the accepted reports for the given doctor email
+    const acceptedReportEntry = patient.accepted_reports.find(
+      (entry) => entry.doc_email === doc_email
+    );
+
+    console.log(acceptedReportEntry);
+    // If no accepted reports found for this doctor, return empty array
+    if (!acceptedReportEntry) {
+      return res.status(200).json({
+        patientEmail: pat_email,
+        patientHistory: [],
+      });
+    }
+
+    const acceptedReports = acceptedReportEntry.reports; // Array of accepted report names
+
+    // Filter patient history to only include files that match accepted reports
+    const filteredPatientHistory = patient.pat_history.filter((report) =>
+      acceptedReports.includes(report.fileName)
+    );
+
+    // Send success response with filtered patient history
+    res.status(200).json({
+      patientEmail: pat_email,
+      patientHistory: filteredPatientHistory,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send("An error occurred while fetching the patient's history.");
+  }
+});
