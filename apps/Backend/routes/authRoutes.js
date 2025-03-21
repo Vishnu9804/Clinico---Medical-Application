@@ -708,4 +708,22 @@ router.post("/request-permission", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+router.post("/get-doctor-permission-lists", async (req, res) => {
+  try {
+    const { doc_email } = req.body;
+
+    console.log(doc_email);
+    const doctor = await Doctor.findOne({ doc_email: doc_email });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    return res.status(200).json({
+      permission_granted: doctor.dpermission_granted,
+      permission_pending: doctor.dpermission_pending,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
