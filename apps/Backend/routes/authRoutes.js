@@ -1113,3 +1113,44 @@ router.post("/add-staff", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+router.post("/remove-staff", async (req, res) => {
+  try {
+    const { doc_email, staff_email } = req.body;
+
+    // Validate required fields
+    if (!doc_email || !staff_email) {
+      return res
+        .status(400)
+        .json({ message: "Both doctor and staff emails are required" });
+    }
+
+    // Check if doctor exists
+    const doctor = await Doctor.findOne({ doc_email });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Check if staff exists in doctor's employee list
+    const staffIndex = doctor.emp_list.findIndex(
+      (emp) => emp.staff_email === staff_email
+    );
+    if (staffIndex === -1) {
+      return res
+        .status(404)
+        .json({ message: "Staff not assigned to this doctor" });
+    }
+
+    // Remove staff from emp_list
+    doctor.emp_list.splice(staffIndex, 1);
+    await doctor.save();
+
+    return res
+      .status(200)
+      .json({ message: "Staff removed successfully", doctor });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+module.exports = router;
