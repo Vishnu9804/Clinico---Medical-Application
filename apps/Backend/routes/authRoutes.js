@@ -830,3 +830,38 @@ router.post("/request-report", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.post("/get-patient-reports", async (req, res) => {
+  console.log("Inside get-patient-reports...");
+  try {
+    const { doc_email, pat_email } = req.body; // Taking input from request body
+
+    // Find the doctor
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found", reports: [] });
+    }
+
+    // Find the patient's reports inside the doctor's patient_reports array
+    const patientReport = doctor.patient_reports.find(
+      (p) => p.pat_email === pat_email
+    );
+
+    if (!patientReport) {
+      console.log("No reports found for this patient.");
+      return res
+        .status(404)
+        .json({ message: "No reports found for this patient", reports: [] });
+    }
+
+    res.status(200).json({
+      message: "Reports retrieved successfully",
+      reports: patientReport.reports || [],
+    });
+  } catch (error) {
+    console.error("Error in /get-patient-reports:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+});
