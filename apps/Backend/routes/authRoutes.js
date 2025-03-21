@@ -1000,3 +1000,56 @@ router.post("/remove-visiting-patient", async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
+router.post("/searchpatient", async (req, res) => {
+  try {
+    const { doc_email } = req.body;
+
+    if (!doc_email) {
+      return res.status(400).json({ error: "Doctor email is required" });
+    }
+
+    // Find doctor by email
+    const doctor = await Doctor.findOne({ doc_email });
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Extract emails from visiting_patients (FIFO order should be maintained)
+    const visitingEmails = doctor.visiting_patients;
+
+    // Find patient details only for visiting patients
+    const patients = await Patient.find(
+      { pat_email: { $in: visitingEmails } },
+      "pat_email pat_name"
+    );
+
+    // Create a map for quick lookup
+    const patientMap = new Map();
+    patients.forEach((patient) => {
+      patientMap.set(patient.pat_email, patient.pat_name);
+    });
+
+    // Maintain the queue order from visitingEmails
+    const patientList = visitingEmails.map((email) => {
+      let status = "not"; // Default status
+
+      if (doctor.dpermission_granted.includes(email)) {
+        status = "granted";
+      } else if (doctor.dpermission_pending.includes(email)) {
+        status = "pending";
+      }
+
+      return {
+        email: email,
+        name: patientMap.get(email) || "Unknown",
+        status, // Maintain status field
+      };
+    });
+
+    res.status(200).json({ patients: patientList });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
