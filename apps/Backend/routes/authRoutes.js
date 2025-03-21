@@ -1053,3 +1053,63 @@ router.post("/searchpatient", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+router.post("/add-staff", async (req, res) => {
+  try {
+    const { doc_email, staff_email, designation } = req.body;
+
+    // Validate required fields
+    if (!doc_email || !staff_email || !designation) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if doctor exists
+    const doctor = await Doctor.findOne({ doc_email });
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Check if staff exists
+    const staff = await Staff.findOne({ staff_email });
+    if (!staff) {
+      return res.status(404).json({ message: "Staff not found" });
+    }
+
+    // Check if staff is already assigned to the doctor
+    const staffIndex = doctor.emp_list.findIndex(
+      (emp) => emp.staff_email === staff_email
+    );
+
+    if (staffIndex !== -1) {
+      // If staff exists, update the designation
+      doctor.emp_list[staffIndex].designation = designation;
+      await doctor.save();
+
+      // Update designation and doc_email in staff schema
+      staff.designation = designation;
+      staff.doc_email = doc_email;
+      await staff.save();
+
+      return res.status(200).json({
+        message: "Staff designation updated successfully",
+        doctor,
+        staff,
+      });
+    }
+
+    // If staff is not in emp_list, add as a new staff
+    doctor.emp_list.push({ staff_email, designation });
+    await doctor.save();
+
+    // Update designation and doc_email in staff schema
+    staff.designation = designation;
+    staff.doc_email = doc_email;
+    await staff.save();
+
+    return res
+      .status(200)
+      .json({ message: "Staff added successfully", doctor, staff });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
