@@ -756,4 +756,77 @@ router.post("/getpatients", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+router.post("/request-report", async (req, res) => {
+  console.log("in here....");
+  try {
+    const { pat_email, doc_email, requested_reports } = req.body;
 
+    // Ensure patient exists (case-insensitive search)
+    const patient = await Patient.findOne({
+      pat_email: { $regex: new RegExp("^" + pat_email + "$", "i") },
+    });
+
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    // Ensure doctor exists (case-insensitive search)
+    const doctor = await Doctor.findOne({
+      doc_email: { $regex: new RegExp("^" + doc_email + "$", "i") },
+    });
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Check if doc_email is in dpermission_granted array of the doctor
+    if (!doctor.dpermission_granted.includes(pat_email)) {
+      return res.status(403).json({
+        message:
+          "Doctor does not have permission to request reports for this patient",
+      });
+    }
+
+    // Find the patient reports under the doctor
+    const existingReportEntry = doctor.patient_reports.find(
+      (entry) => entry.pat_email.toLowerCase() === pat_email.toLowerCase()
+    );
+
+    if (existingReportEntry) {
+      // Initialize reports as null first
+      let updatedReports = null;
+      // Then assign it the new requested reports
+      updatedReports = [...new Set(requested_reports)];
+
+      await Doctor.findOneAndUpdate(
+        { doc_email: doctor.doc_email, "patient_reports.pat_email": pat_email },
+        { $set: { "patient_reports.$.reports": updatedReports } },
+        { new: true }
+      );
+    } else {
+      // Initialize reports as null first, then assign the requested ones
+      let newReports = null;
+      newReports = [...new Set(requested_reports)];
+
+      await Doctor.findOneAndUpdate(
+        { doc_email: doctor.doc_email },
+        {
+          $push: {
+            patient_reports: {
+              pat_email: patient.pat_email,
+              reports: newReports,
+            },
+          },
+        },
+        { new: true }
+      );
+    }
+
+    res.status(201).json({
+      message: "Report requested successfully",
+      requested_reports: requested_reports,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
