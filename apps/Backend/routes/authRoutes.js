@@ -726,4 +726,34 @@ router.post("/get-doctor-permission-lists", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+router.post("/getpatients", async (req, res) => {
+  try {
+    const { pat_emails } = req.body;
+
+    console.log("Received emails:", pat_emails);
+
+    if (!Array.isArray(pat_emails) || pat_emails.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid input. Provide an array of emails." });
+    }
+
+    const patients = await Patient.find(
+      { pat_email: { $in: pat_emails } },
+      { pat_email: 1, pat_name: 1, pat_age: 1, _id: 0 }
+    );
+
+    console.log("Patients found:", patients);
+
+    const result = patients.map((pat) => ({
+      pat_email: pat.pat_email,
+      name: pat.pat_name,
+    }));
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching patients:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
