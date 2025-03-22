@@ -30,7 +30,7 @@ import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
 import AcceptedDoctor from "./SRC/PatientScreens/Mainpage/AcceptedDoctor";
 import PatientEditProfile from "./SRC/PatientScreens/Mainpage/PatientEditProfile";
-// import PatientProfile from "./SRC/PatientScreens/Mainpage/PatientProfile";
+import PatientProfile from "./SRC/PatientScreens/Mainpage/PatientProfile";
 // import PatientMyUserProfile from "./SRC/PatientScreens/Mainpage/PatientMyUserProfile";
 // import AdminMainpage from "./SRC/StaffScreens/Mainpage/AdminMainpage";
 // import AdminCustomization from "./SRC/StaffScreens/Mainpage/AdminCustomization";
