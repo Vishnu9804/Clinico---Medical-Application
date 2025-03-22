@@ -29,7 +29,7 @@ import PatientMainpage from "./SRC/PatientScreens/Mainpage/PatientMainpage";
 import UploadPage from "./SRC/PatientScreens/Mainpage/UploadPage";
 import ManageRequest from "./SRC/PatientScreens/Mainpage/ManageRequest";
 import AcceptedDoctor from "./SRC/PatientScreens/Mainpage/AcceptedDoctor";
-// import PatientEditProfile from "./SRC/PatientScreens/Mainpage/PatientEditProfile";
+import PatientEditProfile from "./SRC/PatientScreens/Mainpage/PatientEditProfile";
 // import PatientProfile from "./SRC/PatientScreens/Mainpage/PatientProfile";
 // import PatientMyUserProfile from "./SRC/PatientScreens/Mainpage/PatientMyUserProfile";
 // import AdminMainpage from "./SRC/StaffScreens/Mainpage/AdminMainpage";
